@@ -1,0 +1,27 @@
+from PyQt6.QtQml import QQmlApplicationEngine
+from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import QTimer
+
+app = QApplication([])
+engine = QQmlApplicationEngine()
+engine.quit.connect(app.quit)
+engine.load("main.qml")
+
+current_index = 0
+total_frames = 34  # Number of frames in your GIF
+
+def update_background():
+    global current_index
+    path = f'./GIF0/{current_index}'
+    
+    root_object = engine.rootObjects()[0]
+    root_object.setProperty('path', path)
+    
+    current_index = (current_index + 1) % total_frames
+
+timer = QTimer()
+timer.setInterval(200)  # msecs
+timer.timeout.connect(update_background)
+timer.start()
+
+app.exec()
